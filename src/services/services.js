@@ -30,16 +30,16 @@ export const calculateDayTotal = (eventList)=>{
         if (!dayTotalPayments[date]) {
             dayTotalPayments[date] = 0;
         }
+        console.log('data : ' , date , ' payment : ', dayTotalPayments[date])
         dayTotalPayments[date] += parseInt(event.payment);
     });
     return dayTotalPayments;
 }
 
 export const addEvent = async (event,toBeUpdated) => {
-    console.log(event)
     if(!toBeUpdated) {
         event.event_id = uid();
-        event.color = '#ffffff';
+        event.color = '#A9A9A9';
     }
     await setDoc(doc(db, "events", event.event_id), {
         event_id: event.event_id,
@@ -52,8 +52,9 @@ export const addEvent = async (event,toBeUpdated) => {
         color: event.color,
     });
     if(toBeUpdated){
-        events = events.filter(event => event.event_id !== toBeUpdated.event_id);
-        events.push(event);
+        let temp_events = events.filter(e => e.event_id !== event.event_id);
+        temp_events.push(event);
+        events = temp_events
     }
     else
         events.push(event);
@@ -73,17 +74,18 @@ export const getClients = async (setClients) => {
     setClients(clientList);
 }
 
-export const addClient = async(client) => {
+export const addClient = async(client,toBeUpdated) => {
+
 
     const docRef = doc(db, "clients", client.uniqueNumber);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
+    if (docSnap.exists() && toBeUpdated) {
         return null;
     } else {
 
         await setDoc(doc(db, "clients", client.uniqueNumber), {
-            serialNumber: client.serialNumber,
+
             name: client.name,
             vatNumber: client.vatNumber,
             uniqueNumber: client.uniqueNumber,
@@ -94,9 +96,16 @@ export const addClient = async(client) => {
             bank: client.bank,
             iban: client.iban,
             swift: client.swift,
+
         });
 
-        clients.push(client);
+        if(!toBeUpdated){
+            //update client list
+            clients = clients.filter(c=> c.uniqueNumber !== client.uniqueNumber);
+            clients.push(client)
+        }else{
+            clients.push(client);
+        }
         return clients;
     }
 }

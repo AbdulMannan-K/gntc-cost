@@ -4,7 +4,6 @@ import {Button, FormControl, Grid, InputLabel, Select, TextField} from "@mui/mat
 import MenuItem from "@mui/material/MenuItem";
 
 const initialValues = {
-    serialNumber:2,
     name:'',
     vatNumber:'',
     uniqueNumber:'',

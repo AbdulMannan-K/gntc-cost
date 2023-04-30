@@ -64,6 +64,7 @@ export default function Clients() {
     })
     const [openPopup, setOpenPopup] = useState(false)
     const [open, setOpen] = React.useState(false);
+    let serialNumber=1;
 
     const navigate = useNavigate();
 
@@ -91,7 +92,8 @@ export default function Clients() {
     },[0])
 
     const addOrEdit = async (user, resetForm) => {
-        let client = await addClient(user);
+        let update= recordForEdit==undefined
+        let client = await addClient(user,update);
         if(client==null){
             setOpen(true)
             return;
@@ -162,7 +164,7 @@ export default function Clients() {
                                 {
                                     recordsAfterPagingAndSorting().map(user =>
                                         (<TableRow key={user.phoneNumber}>
-                                            <TableCell>{("0000" + user.serialNumber).slice(-5)}</TableCell>
+                                            <TableCell>{("0000" + serialNumber++).slice(-5)}</TableCell>
                                             <TableCell>{user.name}</TableCell>
                                             <TableCell>{user.email}</TableCell>
                                             <TableCell>{user.phoneNumber}</TableCell>

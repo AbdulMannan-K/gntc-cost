@@ -1,5 +1,5 @@
 import {Scheduler,useScheduler} from "@aldabil/react-scheduler";
-import React, {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useEffect, useRef, useState} from "react";
 import {CustomEditor} from "./CustomEditor";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -8,11 +8,13 @@ import {Paper, Stack} from "@mui/material";
 
 export const Calendar = () => {
 
-    const {events,setEvents} = useScheduler();
+    const {events,setEvents,view} = useScheduler();
     const [dayTotal,setDayTotal] = useState({})
     const [width, setWidth] = React.useState(0);
     const [secondWidth, setSecondWidth] = React.useState(0);
     const [dayTotalElement, setDayTotalElement] = React.useState(null);
+    // const [viewMode,setViewMode] = useState('week')
+    let viewMode = 'week'
 
     let colors = {
         green : '#68aa3b',
@@ -64,23 +66,54 @@ export const Calendar = () => {
 
     useEffect( () => {
         getEvents(setEvents)
-        setWidth(document.querySelectorAll(".css-z3jy29 .rs__cell.rs__time")[0].offsetWidth)
-        setSecondWidth(document.querySelectorAll(".css-z3jy29 .rs__cell>button")[0].offsetWidth)
-
+        setWidth(document.querySelectorAll(".rs__cell.rs__time")[0].offsetWidth)
+        setSecondWidth(document.querySelectorAll(".rs__cell>button")[0].offsetWidth)
 
     },[0])
 
-    const getTotal = () => {
-        let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
-        let day = parseInt(dateString.split(' ')[0])
-        let month = getMonthFromString(dateString.split(' ')[3])-1
-        let year = parseInt(dateString.split(' ')[4].split('<')[0])
-        let dayTotalElems = [];
-        for(let i = 0; i < 7; i++){
-            dayTotalElems.push(dayTotal[new Date((year),(month),(day)+i).toDateString()])
+    const getTotal = (viewMode) => {
+        console.log(viewMode)
+        if(viewMode=='month'){
+            setDayTotalElement([])
+        }else if(viewMode=='week') {
+            let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
+            let day = parseInt(dateString.split(' ')[0])
+            let month = getMonthFromString(dateString.split(' ')[3]) - 1
+            let year = parseInt(dateString.split(' ')[4].split('<')[0])
+            let dayTotalElems = [];
+            for (let i = 0; i < 7; i++) {
+                dayTotalElems.push(dayTotal[new Date((year), (month), (day) + i).toDateString()])
+            }
+            setDayTotalElement(dayTotalElems)
+        }else if(viewMode=='day'){
+            let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
+            let day = parseInt(dateString.split(' ')[0])
+            let month = getMonthFromString(dateString.split(' ')[1]) - 1
+            let year = parseInt(dateString.split(' ')[2].split('<')[0])
+            let dayTotalElems = [];
+            dayTotalElems.push(dayTotal[new Date((year), (month), (day)).toDateString()])
+            setDayTotalElement(dayTotalElems)
         }
-        console.log(dayTotal)
-        setDayTotalElement(dayTotalElems)
+    }
+
+    function useInterval(callback, delay) {
+        const savedCallback = useRef();
+
+        // Remember the latest callback.
+        useEffect(() => {
+            savedCallback.current = callback;
+        }, [callback]);
+
+        // Set up the interval.
+        useEffect(() => {
+            function tick() {
+                savedCallback.current();
+            }
+            if (delay !== null) {
+                let id = setInterval(tick, delay);
+                return () => clearInterval(id);
+            }
+        }, [delay]);
     }
 
     useEffect(()=>{
@@ -88,12 +121,7 @@ export const Calendar = () => {
         setDayTotal(dt)
     },[events])
 
-    useEffect(()=>{
-        const interval = setInterval(() => getTotal(), 500);
-        return () => {
-            clearInterval(interval);
-        };
-    },[dayTotal])
+    useInterval(() => getTotal(view), 500);
 
     return (
         <Container maxWidth="xl">
@@ -104,6 +132,7 @@ export const Calendar = () => {
                 onDelete={(event) => {delEvent(event)}}
                 customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
                 view="week"
+                onViewChange={(view) => console.log('View : ',view)}
                 onEventDrop={
                         async (droppedOn, updatedEvent, event) => {
                             await addEvent(updatedEvent,true)
@@ -140,18 +169,15 @@ export const Calendar = () => {
                     );
                 }}
             />
-            <Stack direction="row">
-                <Paper sx={{width:`${width}px`}}></Paper>
+            <Stack direction="row" sx={{ flexWrap: 'wrap',gap:'1px' ,display:{xs:'none',md:'flex'} }}>
+                {view!=='month'?<Paper sx={{width: `${width}px`, fontWeight:'bold' , backgroundColor:'#FCF55F', textAlign: 'center', paddingTop: '10px'}}>Total :</Paper>:null}
                 {
                     dayTotalElement?dayTotalElement.map((date) => {
                         return (
-                            <Paper sx={{width:`${secondWidth}px` , padding:'10px'}}>{date?date.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):'0'}</Paper>
+                            <Paper sx={{width:`${secondWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#FCF55F'}}>{date?date.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):'0'}</Paper>
                         )
                     }):null
                 }
-                {/*<Paper sx={{width:`${secondWidth}px`}}>{dayTotal[new Date().toDateString()]}</Paper>*/}
-                {/*<Paper sx={{width:`${secondWidth}px`}}>Item 1</Paper>*/}
-                {/*<Paper sx={{width:`${secondWidth}px`}}>Item 1</Paper>*/}
             </Stack>
         </Container>
     )
