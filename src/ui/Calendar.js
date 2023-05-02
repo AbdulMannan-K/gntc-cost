@@ -68,7 +68,6 @@ export const Calendar = () => {
         getEvents(setEvents)
         setWidth(document.querySelectorAll(".rs__cell.rs__time")[0].offsetWidth)
         setSecondWidth(document.querySelectorAll(".rs__cell>button")[0].offsetWidth)
-
     },[0])
 
     const getTotal = (viewMode) => {
@@ -169,7 +168,7 @@ export const Calendar = () => {
                     );
                 }}
             />
-            <Stack direction="row" sx={{ flexWrap: 'wrap',gap:'1px' ,display:{xs:'none',md:'flex'} }}>
+            <Stack direction="row" sx={{ flexWrap: 'wrap',gap:'1px' ,display:view!=='day'?{xs:'none',md:'flex'}:'' }}>
                 {view!=='month'?<Paper sx={{width: `${width}px`, fontWeight:'bold' , backgroundColor:'#FCF55F', textAlign: 'center', paddingTop: '10px'}}>Total :</Paper>:null}
                 {
                     dayTotalElement?dayTotalElement.map((date) => {
