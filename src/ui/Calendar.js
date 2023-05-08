@@ -12,6 +12,7 @@ export const Calendar = () => {
     const [dayTotal,setDayTotal] = useState({})
     const [width, setWidth] = React.useState(0);
     const [secondWidth, setSecondWidth] = React.useState(0);
+    const [mobileWidth,setMobileWidth] = React.useState(0)
     const [dayTotalElement, setDayTotalElement] = React.useState(null);
     // const [viewMode,setViewMode] = useState('week')
     let viewMode = 'week'
@@ -30,7 +31,18 @@ export const Calendar = () => {
         startHour: 7,
         endHour: 13,
         navigation: true,
-        disableGoToDay: false
+        disableGoToDay: false,
+        cellRenderer: ({height, start, onClick, ...props}) => {
+            // Fake some condition up
+            const day = start.getDay();
+            const disabled = day === 0;
+            // const restProps = disabled ? {} : props;
+            return (<div className={`min-h-full ${disabled ? 'bg-pink-100' : ''} flex flex-row gap-2`}>
+                <div className=" bg-red-600"></div>
+                {/*<div></div>*/}
+                {/*<div></div>*/}
+            </div>);
+        },
     }
 
     const week = {
@@ -43,16 +55,19 @@ export const Calendar = () => {
 
     const approveEvent = async (event) => {
         event.color = colors.green
+        event.status = 'approved'
         setEvents([...(await addEvent(event, true))])
     }
 
     const cancelEvent = async (event) => {
         event.color = colors.red
+        event.status = 'cancelled'
         setEvents([...(await addEvent(event, true))])
     }
 
     const rescheduleEvent = async (event) => {
         event.color = colors.orange
+        event.status = 'rescheduled'
         setEvents([...(await addEvent(event, true))])
     }
 
@@ -71,7 +86,6 @@ export const Calendar = () => {
     },[0])
 
     const getTotal = (viewMode) => {
-        console.log(viewMode)
         if(viewMode=='month'){
             setDayTotalElement([])
         }else if(viewMode=='week') {
@@ -97,7 +111,6 @@ export const Calendar = () => {
 
     function useInterval(callback, delay) {
         const savedCallback = useRef();
-
         // Remember the latest callback.
         useEffect(() => {
             savedCallback.current = callback;
@@ -120,7 +133,10 @@ export const Calendar = () => {
         setDayTotal(dt)
     },[events])
 
-    useInterval(() => getTotal(view), 500);
+    useInterval(() => {
+        getTotal(view)
+        setMobileWidth(document.querySelectorAll(".rs__cell>button")[0].offsetWidth)
+    }, 500);
 
     return (
         <Container maxWidth="xl">
@@ -142,19 +158,19 @@ export const Calendar = () => {
                     return (<div>
                         <div>
                             <p>Company Name: {event.company} </p>
-                            <p>{event.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+                            <p>{event.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {event.currency=='EURO'?'€':event.currency=='USD'?'$':'₣'}</p>
                             <p>Bank: {event.bank}</p>
                         </div>
                         <div style={{display:'flex', justifyContent:'stretch',gap:'5px' ,marginBottom:'10px'}}>
-                            <Button sx={{width:'50%'}} variant="outlined" type="button"
+                            <Button sx={{width:'50%'}} disabled={event.status=='canceled'?true:false} variant="outlined" type="button" color="success"
                                 onClick={() => {approveEvent(event)}}
                             >Approve</Button>
-                            <Button sx={{width:'50%'}} variant="outlined" type="button" color="error"
-                                onClick={() => {cancelEvent(event)}}
-                            >Cancel</Button>
-                            <Button sx={{width:'50%'}} variant="outlined" type="button" color="warning"
+                            <Button sx={{width:'50%'}} disabled={event.status=='pending' || event.status=='rescheduled'?false:true} variant="outlined" type="button" color="warning"
                                     onClick={() => {rescheduleEvent(event)}}
                             >Reschedule</Button>
+                            <Button sx={{width:'50%'}} disabled={event.status=='approved'?true:false} variant="outlined" type="button" color="error"
+                                onClick={() => {cancelEvent(event)}}
+                            >Cancel</Button>
                         </div>
                     </div>);
                 }}
@@ -162,18 +178,21 @@ export const Calendar = () => {
                     return (
                         <div className="event-render" style={{color:'black',textAlign:'left'}}>
                             <h3>{event.company} </h3>
-                            <h3>{event.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} €</h3>
+                            <h3>{event.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {event.currency=='EURO'?'€':event.currency=='USD'?'$':'₣'}</h3>
                             <h3>{event.bank}</h3>
                         </div>
                     );
                 }}
             />
             <Stack direction="row" sx={{ flexWrap: 'wrap',gap:'1px' ,display:view!=='day'?{xs:'none',md:'flex'}:'' }}>
-                {view!=='month'?<Paper sx={{width: `${width}px`, fontWeight:'bold' , backgroundColor:'#FCF55F', textAlign: 'center', paddingTop: '10px'}}>Total :</Paper>:null}
+                {view!=='month'?<Paper sx={{width: `${width}px`, fontWeight:'bold' , backgroundColor:'#29AB87', textAlign: 'center', paddingTop: '10px',display:{xs:'none',md:'flex'}}}>Total :</Paper>:null}
                 {
                     dayTotalElement?dayTotalElement.map((date) => {
                         return (
-                            <Paper sx={{width:`${secondWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#FCF55F'}}>{date?date.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):'0'}</Paper>
+                            <>
+                                <Paper sx={{width:`${secondWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#29AB87',display:{xs:'none',md:'flex'}}}>{date?date.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):'0'}</Paper>
+                                <Paper sx={{width:`${width+mobileWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#29AB87',display:{xs:'flex',md:'none'}}}>Total: {date?date.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):'0'}</Paper>
+                            </>
                         )
                     }):null
                 }

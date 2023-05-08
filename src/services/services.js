@@ -7,6 +7,8 @@ const uid = new ShortUniqueId({ length: 10 });
 let clients = []
 let events = []
 
+// status types: pending, paid, cancelled, rescheduled
+
 export const getEvents = async (setEvents) => {
     const eventSnapshot = await getDocs(collection(db, "events"));
     let eventList = eventSnapshot.docs.map(doc => doc.data());
@@ -30,7 +32,6 @@ export const calculateDayTotal = (eventList)=>{
         if (!dayTotalPayments[date]) {
             dayTotalPayments[date] = 0;
         }
-        console.log('data : ' , date , ' payment : ', dayTotalPayments[date])
         dayTotalPayments[date] += parseInt(event.payment);
     });
     return dayTotalPayments;
@@ -50,6 +51,8 @@ export const addEvent = async (event,toBeUpdated) => {
         bank: event.bank,
         payment: event.payment,
         color: event.color,
+        currency: event.currency,
+        status: event.status,
     });
     if(toBeUpdated){
         let temp_events = events.filter(e => e.event_id !== event.event_id);

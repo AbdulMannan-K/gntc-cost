@@ -48,8 +48,16 @@
     color : white !important;
 }
 
+.css-1fitlit{
+    color: red !important;
+}
+
 h3{
     margin: 8px;
+}
+
+.css-1nlly2f .rs__cell.rs__header > :first-of-type{
+    background-color: #29AB87 !important;
 }
 
 .event-render{

@@ -68,11 +68,12 @@ export const CustomEditor = ({ scheduler }) => {
                         company: state.company,
                         bank: state.bank,
                         payment: state.payment,
+                        status: "pending",
+                        currency: companies.find((company)=>company.name === state.company)?.currency,
                         color: "#ffffff"
                     });
                 }, 100);
             })) ;
-
             addEvent(added_updated_event,false)
             console.log(events);
             scheduler.onConfirm(added_updated_event, event ? "edit" : "create");

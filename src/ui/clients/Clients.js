@@ -132,7 +132,7 @@ export default function Clients() {
             <Container maxWidth="xl">
                     <Paper sx={classes.pageContent}>
                         <div style={classes.toolBar}>
-                            <Typography variant="h4" noWrap  component="div">
+                            <Typography variant="h4" sx={{display:{xs:'none',md:'flex'}}} noWrap  component="div">
                                 Companies
                             </Typography>
                             <div style={classes.searchToggle}>
@@ -150,12 +150,23 @@ export default function Clients() {
                                 <Button
                                     variant="outlined"
                                     size="medium"
+                                    sx={{display:{xs:'none',md:'flex'}}}
                                     startIcon={<AddIcon/>}
                                     onClick={async () => {
                                         setOpenPopup(true);
                                         setRecordForEdit(null);
                                     }}
                                 >Add Company</Button>
+                                <Button
+                                    variant="outlined"
+                                    size="medium"
+                                    sx={{display:{xs:'flex',md:'none'}}}
+                                    startIcon={<AddIcon/>}
+                                    onClick={async () => {
+                                        setOpenPopup(true);
+                                        setRecordForEdit(null);
+                                    }}
+                                >Add</Button>
                             </div>
                         </div>
                         <TblContainer>
