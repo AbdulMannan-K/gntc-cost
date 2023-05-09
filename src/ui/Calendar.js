@@ -135,11 +135,11 @@ export const Calendar = () => {
 
     useInterval(() => {
         getTotal(view)
-        setMobileWidth(document.querySelectorAll(".rs__cell>button")[0].offsetWidth)
+        setMobileWidth(document.querySelectorAll(".rs__cell>button")[0]?document.querySelectorAll(".rs__cell>button")[0].offsetWidth:0)
     }, 500);
 
     return (
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" id="calendar">
             <Scheduler
                 month={month}
                 week={week}

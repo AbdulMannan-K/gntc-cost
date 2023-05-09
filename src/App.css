@@ -68,3 +68,17 @@ h3{
     /*align-items: center;*/
     /*gap: 10px;*/
 }
+
+#calendar{
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/*[data-testid="rs-wrapper"] {*/
+/*    height: 80vh;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    flex-direction: column;*/
+/*}*/

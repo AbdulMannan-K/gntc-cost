@@ -118,3 +118,7 @@ export const deleteClient = async (id) => {
     clients = clients.filter(client => client.uniqueNumber !== id);
     return clients;
 }
+
+export const getReports(timeRange,companyName,bankName,currency){
+
+}
