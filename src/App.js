@@ -8,6 +8,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
 import Clients from "./ui/clients/Clients";
 import ClientForm from "./ui/clients/ClientForm";
+import Reports from "./ui/reports/Reports";
 
 function App() {
 
@@ -51,7 +52,9 @@ function App() {
                 {
                     path:"/reports",
                     element:
-                        <div>Reports</div>
+                        <div>
+                            <Reports></Reports>
+                        </div>
                 }
             ]
         },

@@ -50,7 +50,7 @@ function Navbar() {
                             display: { xs: 'none', md: 'flex' },
                         }}
                         alt="gntc cost logo"
-                        src="gntc_logo.png"
+                        src="gntc_logo.jpg"
                     />
                     <Typography
                         variant="h6"
@@ -112,7 +112,7 @@ function Navbar() {
                             display: { xs: 'flex', md: 'none' },
                         }}
                         alt="gntc cost logo"
-                        src="gntc_logo.png"
+                        src="gntc_logo.jpg"
                     />
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (

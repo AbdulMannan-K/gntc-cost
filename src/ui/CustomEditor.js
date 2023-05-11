@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {DialogActions, FormControl, InputLabel, Select, TextField} from "@mui/material";
+import {Autocomplete, DialogActions, FormControl, InputLabel, Select, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import {useScheduler} from "@aldabil/react-scheduler";
@@ -93,21 +93,13 @@ export const CustomEditor = ({ scheduler }) => {
                     fullWidth
                     disabled
                 />
-                <FormControl fullWidth>
-                    <InputLabel>Company</InputLabel>
-                    <Select
-                        value={state.company}
-                        label="Age"
-                        error={!!error.company}
-                        onChange={(e)=>handleChange(e.target.value,"company")}
-                    >
-                        {
-                            companies.map((company) => (
-                                <MenuItem key={company.uniqueNumber} value={company.name}>{company.name}</MenuItem>
-                            ))
-                        }
-                    </Select>
-                </FormControl>
+                <Autocomplete
+                    disablePortal
+                    options={companies.map((option) => option.name)}
+                    sx={{ width: 250 }}
+                    onChange={(event, newValue) => {handleChange(newValue,'company')}}
+                    renderInput={(params) => <TextField {...params} label="Company" />}
+                />
                 <TextField
                     label="Payment"
                     value={state.payment}

@@ -119,6 +119,18 @@ export const deleteClient = async (id) => {
     return clients;
 }
 
-export const getReports(timeRange,companyName,bankName,currency){
-
+export const getReports=async(setReports,timeRange,companyName,bankName,currency)=>{
+    const eventSnapshot = await getDocs(collection(db, "events"));
+    let eventList = eventSnapshot.docs.map(doc => doc.data());
+    eventList = eventList.map(event => {
+        return {
+            ...event,
+            start: (new Date(event.start.seconds * 1000)),
+            end: new Date(event.end.seconds * 1000),
+        }
+    })
+    events = eventList;
+    console.log(eventList[0].start)
+    setReports(eventList);
+    return eventList;
 }

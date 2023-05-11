@@ -82,3 +82,25 @@ h3{
 /*    justify-content: center;*/
 /*    flex-direction: column;*/
 /*}*/
+
+#dateRange {
+    appearance: none;
+    border: 1px solid lightgrey;
+    outline: none;
+    background-color: transparent;
+    font-size: inherit;
+}
+
+/* Add box shadow on focus */
+#dateRange:hover {
+    border: 1px solid black;
+}
+#dateRange:focus {
+    border: 0.13rem solid #1976D2;
+}
+
+/* Add padding and border radius */
+#dateRange {
+    padding: 10px;
+    border-radius: 4px;
+}
