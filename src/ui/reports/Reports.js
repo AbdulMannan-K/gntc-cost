@@ -42,7 +42,7 @@ const styles = {
         alignItems: "center",
         justifyContent:"space-between",
         overflow: "auto",
-        height: '5vh',
+        height: '6vh',
     },
     searchToggle: {
         display: 'flex' ,
@@ -297,14 +297,26 @@ export default function Reports() {
                             }
                             {
                                 <TableRow>
-                                    <TableCell></TableCell>
+                                    <TableCell>
+                                        <IconButton
+                                            variant="filled"
+                                            color="primary"
+                                            size="small"
+                                            sx={{display:{xs:'flex',md:'none'}}}
+                                            onClick={() => {
+                                                exportToCSV(recordsAfterPagingAndSorting(), 'reports')
+                                            }}
+                                        >
+                                            <SaveAltOutlined />
+                                        </IconButton>
+                                    </TableCell>
                                     <TableCell></TableCell>
                                     <TableCell></TableCell>
                                     <TableCell></TableCell>
                                     <TableCell></TableCell>
                                     <TableCell></TableCell>
                                     <TableCell>
-                                        <Typography variant="h6" sx={{display:{xs:'none',md:'flex'}}} noWrap  component="div">
+                                        <Typography variant="h6"  noWrap  component="div">
                                             Total: {(recordsAfterPagingAndSorting().reduce((a,b)=>a+parseInt(b.payment),0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                         </Typography>
                                     </TableCell>
@@ -312,13 +324,14 @@ export default function Reports() {
                             }
                         </TableBody>
                     </TblContainer>
-                    <span style={{position:'absolute',marginTop:10, zIndex:100}}>
-                        <div style={{display:'inline-flex',justifyContent:'flex-end'    }}>
+                    <span style={{position:'absolute',marginTop:10, zIndex:100,}}>
+                        <div style={{display:"block"    }}>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 size="small"
                                 startIcon={<SaveAltOutlined />}
+                                sx={{display:{xs:'none',md:'flex'}}}
                                 onClick={() => {
                                     exportToCSV(recordsAfterPagingAndSorting(), 'reports')
                                 }}
