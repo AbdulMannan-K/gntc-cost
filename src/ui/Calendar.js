@@ -1,4 +1,4 @@
-import {Scheduler,useScheduler} from "@aldabil/react-scheduler";
+    import {Scheduler,useScheduler} from "@aldabil/react-scheduler";
 import React, {Fragment, useEffect, useRef, useState} from "react";
 import {CustomEditor} from "./CustomEditor";
 import Container from "@mui/material/Container";
@@ -86,7 +86,7 @@ export const Calendar = () => {
     },[0])
 
     const getTotal = (viewMode) => {
-        if(viewMode=='month'){
+        if(viewMode=='month'){      
             setDayTotalElement([])
         }else if(viewMode=='week') {
             let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
