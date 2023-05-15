@@ -56,8 +56,8 @@ const headCells = [
     { id: 'date' , label: 'Date' },
     { id: 'name', label: 'Company Name' },
     { id: 'bank', label: 'Bank Name' },
-    { id: 'currency', label: 'Currency'},
     { id: 'status', label: 'Status'},
+    { id: 'currency', label: 'Currency'},
     { id: 'amount', label: 'Amount'},
 ]
 
@@ -145,6 +145,8 @@ export default function Reports() {
             return '#FF0000'
         }else if (status=='rescheduled'){
             return '#F7A500'
+        }else if (status=='paid'){
+            return '#00BFFF'
         }
     }
 

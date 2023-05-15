@@ -7,7 +7,7 @@ import {
     InputAdornment,
     Typography, Input, Button, TableRow, TextField, Snackbar, Alert,
 } from '@mui/material';
-import {Search} from "@mui/icons-material";
+import {PreviewOutlined, Search} from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -17,6 +17,7 @@ import useTable from "../components/useTable";
 import {useNavigate} from "react-router-dom";
 import Container from "@mui/material/Container";
 import {addClient, deleteClient, getClients} from "../../services/services";
+import ImageUpload from "./ImageUpload";
 
 
 const styles = {
@@ -50,6 +51,7 @@ const headCells = [
     { id: 'bank', label: 'Bank'},
     { id: 'iban', label: 'IBAN'},
     { id: 'swift', label: 'Swift No.'},
+    { id: 'documents', label: 'Documents'},
     { id: 'edit', label: 'Edit', disableSorting: true}
 ]
 
@@ -64,6 +66,8 @@ export default function Clients() {
     })
     const [openPopup, setOpenPopup] = useState(false)
     const [open, setOpen] = React.useState(false);
+    const [imageView,setImageView] = useState(false);
+    const [currentClient,setCurrentClient] = useState(null)
     let serialNumber=1;
 
     const navigate = useNavigate();
@@ -187,6 +191,14 @@ export default function Clients() {
                                             <TableCell>{user.iban}</TableCell>
                                             <TableCell>{user.swift}</TableCell>
                                             <TableCell>
+                                                <IconButton
+                                                    color='primary'
+                                                    onClick={()=>{setImageView(true);setCurrentClient(user)}}
+                                                >
+                                                    <PreviewOutlined fontSize='small'/>
+                                                </IconButton>
+                                            </TableCell>
+                                            <TableCell>
                                                 <div style={{display:'flex'}}>
                                                     <IconButton
                                                         color="primary"
@@ -218,6 +230,12 @@ export default function Clients() {
                         />
                     </Popup>
             </Container>
+            <ImageUpload
+                open={imageView}
+                setOpen={setImageView}
+                images_data={currentClient?currentClient.images:undefined}
+                company={currentClient?currentClient:undefined}
+            ></ImageUpload>
         </>
     )
 }

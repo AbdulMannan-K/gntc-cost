@@ -4,6 +4,7 @@ import {CustomEditor} from "./CustomEditor";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import {addEvent, calculateDayTotal, deleteEvent, getEvents} from "../services/services";
+import BeenhereIcon from '@mui/icons-material/Beenhere';
 import {Paper, Stack} from "@mui/material";
 
 export const Calendar = () => {
@@ -51,6 +52,12 @@ export const Calendar = () => {
 
     const day = {
         startHour: 7, endHour: 13, step: 60, navigation: true
+    }
+
+    const payEvent = async (event) => {
+        event.color = colors.green
+        event.status = 'paid'
+        setEvents([...(await addEvent(event, true))])
     }
 
     const approveEvent = async (event) => {
@@ -162,22 +169,28 @@ export const Calendar = () => {
                             <p>Bank: {event.bank}</p>
                         </div>
                         <div style={{display:'flex', justifyContent:'stretch',gap:'5px' ,marginBottom:'10px'}}>
-                            <Button sx={{width:'50%'}} disabled={event.status=='canceled'?true:false} variant="outlined" type="button" color="success"
+                            <Button sx={{width:'50%'}} disabled={event.status=='cancelled'||event.status=='paid'?true:false} variant="outlined" type="button" color="success"
                                 onClick={() => {approveEvent(event)}}
                             >Approve</Button>
                             <Button sx={{width:'50%'}} disabled={event.status=='pending' || event.status=='rescheduled'?false:true} variant="outlined" type="button" color="warning"
                                     onClick={() => {rescheduleEvent(event)}}
                             >Reschedule</Button>
-                            <Button sx={{width:'50%'}} disabled={event.status=='approved'?true:false} variant="outlined" type="button" color="error"
+                            <Button sx={{width:'50%'}} disabled={event.status=='approved'||event.status=='paid'?true:false} variant="outlined" type="button" color="error"
                                 onClick={() => {cancelEvent(event)}}
                             >Cancel</Button>
                         </div>
+                        <Button fullWidth disabled={event.status!='approved' && event.status!='paid'?true:false} variant="contained" type="button" color="primary"
+                                onClick={() => {payEvent(event)}}
+                        >{event.status=='paid'?'Paid':'Pay'}</Button>
                     </div>);
                 }}
                 eventRenderer={(event) => {
                     return (
                         <div className="event-render" style={{color:'black',textAlign:'left'}}>
-                            <h3>{event.company} </h3>
+                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                <h3 style={{display:'inline',marginBottom:'0px'}}>{event.company} </h3>
+                                <BeenhereIcon sx={{display:event.status=='paid'?'flex':'none'}} size='small' color='primary'></BeenhereIcon>
+                            </div>
                             <h3>{event.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {event.currency=='EURO'?'€':event.currency=='USD'?'$':'₣'}</h3>
                             <h3>{event.bank}</h3>
                         </div>

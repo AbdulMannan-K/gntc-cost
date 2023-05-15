@@ -74,6 +74,7 @@ export const getClients = async (setClients) => {
     const clientSnapshot = await getDocs(collection(db, "clients"));
     const clientList = clientSnapshot.docs.map(doc => doc.data());
     clients = clientList;
+    console.log(clients)
     setClients(clientList);
 }
 
@@ -99,6 +100,7 @@ export const addClient = async(client,toBeUpdated) => {
             bank: client.bank,
             iban: client.iban,
             swift: client.swift,
+            images:[]
 
         });
 
@@ -118,6 +120,33 @@ export const deleteClient = async (id) => {
     clients = clients.filter(client => client.uniqueNumber !== id);
     return clients;
 }
+
+export const addImageToClient = async (client,image)=>{
+    const docRef = doc(db, "clients", client.uniqueNumber);
+    const docSnap = await getDoc(docRef);
+    await setDoc(doc(db, "clients", client.uniqueNumber), {
+        ...client,
+        images: [...client.images,image]
+    });
+    clients = clients.filter(c=> c.uniqueNumber !== client.uniqueNumber);
+    client.push(image)
+    clients.push(client)
+    return client;
+}
+
+export const delImageFromClient = async (client,image)=>{
+    const docRef = doc(db, "clients", client.uniqueNumber);
+    client.images = client.images.filter(img=>img!=image)
+    const docSnap = await getDoc(docRef);
+    await setDoc(doc(db, "clients", client.uniqueNumber), {
+        ...client,
+        images: client.images
+    });
+    clients = clients.filter(c=> c.uniqueNumber !== client.uniqueNumber);
+    clients.push(client)
+    return client;
+}
+
 
 export const getReports=async(setReports,timeRange,companyName,bankName,currency)=>{
     const eventSnapshot = await getDocs(collection(db, "events"));
