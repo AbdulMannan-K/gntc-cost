@@ -129,7 +129,7 @@ export const addImageToClient = async (client,image)=>{
         images: [...client.images,image]
     });
     clients = clients.filter(c=> c.uniqueNumber !== client.uniqueNumber);
-    client.push(image)
+    client.images.push(image)
     clients.push(client)
     return client;
 }

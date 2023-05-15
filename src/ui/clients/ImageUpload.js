@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {Dialog} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,14 +12,16 @@ import axios from "axios";
 function ImageUpload(props) {
 
     const {open,setOpen,images_data,company} = props;
-    const [image,setImage] = useState(null);
+    const [image,setImage] = useState(images_data!=null?images_data[0]:null);
     const [currentImage,setCurrentImage] = useState(0)
     const [images,setImages] = useState([]);
     const [imageViewer,setImageViewer] = useState(false);
 
     useEffect(()=> {
-        setImages(images_data)
-    },[0])
+        console.log('images_data : ')
+        console.log(images_data)
+        images_data!=null?setImages([...images_data]):setImages([]);
+    },[images_data])
 
     const closeImageViewer = () => {
         setCurrentImage(0);
@@ -35,7 +37,7 @@ function ImageUpload(props) {
         console.log('images : ')
         console.log(images_data)
         console.log(images)
-        if(images.length==5) {
+        if(images!=null && images.length==5) {
             alert('You cant enter more then 5 images')
             return
         }
@@ -47,19 +49,23 @@ function ImageUpload(props) {
         const formData = new FormData()
         formData.append('image', image)
         formData.append('client',company.name )
-        axios.post("http://localhost:4000/", formData, {
+        axios.post(`http://localhost:4000/${company.name}`, formData, {
         }).then(async res => {
-            images.push(res.data)
-            setImages(await addImageToClient(company,image));
+            images?setImages([...images,res.data]):setImages([res.data]);
+            (await addImageToClient(company,res.data));
         })
     }
 
     async function handleImageDelete(e, imageToDel, index) {
         setImages(images.filter((image) => image != imageToDel))
-        setImages(await delImageFromClient(company,imageToDel));
         let imageName = imageToDel.split('/');
-        axios.delete(`http://localhost:4000/${imageName[imageName.length - 1]}`, {}).then(async res => {
+        console.log('imageName : ', imageName)
+        console.log(imageToDel)
+        axios.delete(`http://localhost:4000/${imageName[imageName.length - 1]}/${company.name}`, {
+
+        }).then(async res => {
             console.log(res)
+            await delImageFromClient(company,imageToDel)
         })
     }
 
