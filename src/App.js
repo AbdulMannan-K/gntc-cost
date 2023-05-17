@@ -9,6 +9,8 @@ import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
 import Clients from "./ui/clients/Clients";
 import ClientForm from "./ui/clients/ClientForm";
 import Reports from "./ui/reports/Reports";
+import Login from "./auth/login";
+import Signup from "./auth/signup";
 
 function App() {
 
@@ -54,6 +56,20 @@ function App() {
                     element:
                         <div>
                             <Reports></Reports>
+                        </div>
+                },
+                {
+                    path:"/login",
+                    element:
+                        <div>
+                            <Login></Login>
+                        </div>
+                },
+                {
+                    path:"/signup",
+                    element:
+                        <div>
+                            <Signup></Signup>
                         </div>
                 }
             ]

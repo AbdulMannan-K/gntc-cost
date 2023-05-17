@@ -32,9 +32,30 @@ export const calculateDayTotal = (eventList)=>{
         if (!dayTotalPayments[date]) {
             dayTotalPayments[date] = 0;
         }
-        dayTotalPayments[date] += parseInt(event.payment);
+        dayTotalPayments[date] += parseFloat(event.payment);
     });
     return dayTotalPayments;
+}
+
+export const signUp = async (user) => {
+    try {
+        const docRef = await setDoc(doc(db, "users",user.email), {
+            email:user.email,
+            firstName:user.firstName,
+            secondName:user.secondName,
+            password:user.password,
+            role:user.role
+        });
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
+
+export const getEmp= async (emp) => {
+    const docc = doc(db, "users", emp);
+    const docSnap = await getDoc(docc);
+    let findEmp = docSnap.data();
+    return findEmp;
 }
 
 export const addEvent = async (event,toBeUpdated) => {

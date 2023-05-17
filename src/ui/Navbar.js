@@ -13,9 +13,10 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {useNavigate} from "react-router-dom";
+import {getAuth} from "firebase/auth";
 
 const pages = [{label:'Calendar',path:'/calendar'}, {label:'Clients',path:'/companies'}, {label:'Reports',path:'/reports'}];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Log out'];
 
 function Navbar() {
 
@@ -42,6 +43,15 @@ function Navbar() {
     return (
         <AppBar position="static" sx={{bgcolor:'#29AB87'}}>
             <Container maxWidth="xl">
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+
+                    }}
+                >
+
                 <Toolbar disableGutters>
                     <Box
                         component="img"
@@ -103,6 +113,15 @@ function Navbar() {
                                     <Typography textAlign="center">{page.label}</Typography>
                                 </MenuItem>
                             ))}
+                            <MenuItem key={'logout'} onClick={()=>{handleCloseNavMenu();
+                                localStorage.removeItem('Auth Token');
+                                localStorage.removeItem('employee')
+                                localStorage.removeItem('Role')
+                                const auth = getAuth();
+                                auth.signOut();
+                                navigate('/login')}}>
+                                <Typography textAlign="center">Logout</Typography>
+                            </MenuItem>
                         </Menu>
                     </Box>
                     <Box
@@ -128,6 +147,23 @@ function Navbar() {
 
 
                 </Toolbar>
+                    <Box sx={{ flexGrow: 1,justifyContent:'flex-end', display: { xs: 'none', md: 'flex' } }}>
+                        <Button
+                            key={'logout'}
+                            onClick={()=>{
+                                localStorage.removeItem('Auth Token');
+                                localStorage.removeItem('employee')
+                                localStorage.removeItem('Role')
+                                const auth = getAuth();
+                                auth.signOut();
+                                navigate('/login')}
+                            }
+                            sx={{ my: 2, color: 'white', display: 'block' }}
+                        >
+                            Logout, {localStorage.getItem('employee')}
+                        </Button>
+                    </Box>
+                </div>
             </Container>
         </AppBar>
     );

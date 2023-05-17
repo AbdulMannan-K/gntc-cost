@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import {addEvent, calculateDayTotal, deleteEvent, getEvents} from "../services/services";
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import {Paper, Stack} from "@mui/material";
+    import {useNavigate} from "react-router-dom";
 
 export const Calendar = () => {
 
@@ -17,6 +18,13 @@ export const Calendar = () => {
     const [dayTotalElement, setDayTotalElement] = React.useState(null);
     // const [viewMode,setViewMode] = useState('week')
     let viewMode = 'week'
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        const user = localStorage.getItem('Auth Token');
+        if(user==null) navigate("/login")
+    }, [0]);
 
     let colors = {
         green : '#68aa3b',
@@ -145,6 +153,10 @@ export const Calendar = () => {
         setMobileWidth(document.querySelectorAll(".rs__cell>button")[0]?document.querySelectorAll(".rs__cell>button")[0].offsetWidth:0)
     }, 500);
 
+    function formatToCurrency(amount){
+        return parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+
     return (
         <Container maxWidth="xl" id="calendar">
             <Scheduler
@@ -162,20 +174,21 @@ export const Calendar = () => {
                         }
                 }
                 viewerExtraComponent={(fields, event) => {
+                    const role = localStorage.getItem('Role');
                     return (<div>
                         <div>
                             <p>Company Name: {event.company} </p>
-                            <p>{event.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {event.currency=='EURO'?'€':event.currency=='USD'?'$':'₣'}</p>
+                            <p>{formatToCurrency(event.payment)} {event.currency=='EUR'?'€':event.currency=='USD'?'$':'₣'}</p>
                             <p>Bank: {event.bank}</p>
                         </div>
                         <div style={{display:'flex', justifyContent:'stretch',gap:'5px' ,marginBottom:'10px'}}>
-                            <Button sx={{width:'50%'}} disabled={event.status=='cancelled'||event.status=='paid'?true:false} variant="outlined" type="button" color="success"
+                            <Button sx={{width:'50%'}} disabled={event.status=='cancelled'||event.status=='paid' || role=='Employee'?true:false} variant="outlined" type="button" color="success"
                                 onClick={() => {approveEvent(event)}}
                             >Approve</Button>
-                            <Button sx={{width:'50%'}} disabled={event.status=='pending' || event.status=='rescheduled'?false:true} variant="outlined" type="button" color="warning"
+                            <Button sx={{width:'50%'}} disabled={(event.status=='pending' || event.status=='rescheduled')&& role!='Employee'?false:true} variant="outlined" type="button" color="warning"
                                     onClick={() => {rescheduleEvent(event)}}
                             >Reschedule</Button>
-                            <Button sx={{width:'50%'}} disabled={event.status=='approved'||event.status=='paid'?true:false} variant="outlined" type="button" color="error"
+                            <Button sx={{width:'50%'}} disabled={event.status=='approved'||event.status=='paid'|| role=='Employee'?true:false} variant="outlined" type="button" color="error"
                                 onClick={() => {cancelEvent(event)}}
                             >Cancel</Button>
                         </div>
@@ -191,7 +204,7 @@ export const Calendar = () => {
                                 <h3 style={{display:'inline',marginBottom:'0px'}}>{event.company} </h3>
                                 <BeenhereIcon sx={{display:event.status=='paid'?'flex':'none'}} size='small' color='primary'></BeenhereIcon>
                             </div>
-                            <h3>{event.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {event.currency=='EURO'?'€':event.currency=='USD'?'$':'₣'}</h3>
+                            <h3>{formatToCurrency(event.payment)} {event.currency=='EUR'?'€':event.currency=='USD'?'$':'₣'}</h3>
                             <h3>{event.bank}</h3>
                         </div>
                     );
@@ -203,8 +216,8 @@ export const Calendar = () => {
                     dayTotalElement?dayTotalElement.map((date) => {
                         return (
                             <>
-                                <Paper sx={{width:`${secondWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#29AB87',display:{xs:'none',md:'flex'}}}>{date?date.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):'0'}</Paper>
-                                <Paper sx={{width:`${width+mobileWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#29AB87',display:{xs:'flex',md:'none'}}}>Total: {date?date.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):'0'}</Paper>
+                                <Paper sx={{width:`${secondWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#29AB87',display:{xs:'none',md:'flex'}}}>{date?formatToCurrency(date):'0'}</Paper>
+                                <Paper sx={{width:`${width+mobileWidth}px`, padding:'10px' , fontWeight:'bold' , backgroundColor:'#29AB87',display:{xs:'flex',md:'none'}}}>Total: {date?formatToCurrency(date):'0'}</Paper>
                             </>
                         )
                     }):null

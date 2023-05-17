@@ -51,6 +51,10 @@
     ]
   },
   "devDependencies": {
-    "react-simple-image-viewer": "^1.2.2"
+    "file-saver": "^2.0.5",
+    "prettier": "^2.8.8",
+    "react-simple-image-viewer": "^1.2.2",
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   }
 }

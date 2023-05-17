@@ -53,12 +53,12 @@ const styles = {
 
 const headCells = [
     { id: 'serialNumber', label:'Nr.'},
-    { id: 'date' , label: 'Date' },
-    { id: 'name', label: 'Company Name' },
+    { id: 'start' , label: 'Date' },
+    { id: 'company', label: 'Company Name' },
     { id: 'bank', label: 'Bank Name' },
     { id: 'status', label: 'Status'},
     { id: 'currency', label: 'Currency'},
-    { id: 'amount', label: 'Amount'},
+    { id: 'payment', label: 'Amount'},
 ]
 
 export default function Reports() {
@@ -156,9 +156,9 @@ export default function Reports() {
         const csvData = [];
         const headers = ["Nr.","Date","Company Name","Bank Name","Currency","Status","Amount"];
         csvData.push(headers);
-        recordsAfterPagingAndSorting1.map((record) => {
+        recordsAfterPagingAndSorting1.map((record,index) => {
             const rowData = [
-                serialNumber++,
+                index+1,
                 record.start.toLocaleDateString(),
                 record.company,
                 record.bank,
@@ -180,6 +180,10 @@ export default function Reports() {
         link.setAttribute('href', 'data:text/csv;charset=utf-8,' + data);
         link.setAttribute('download', 'reports.csv');
         link.click();
+    }
+
+    function formatToCurrency(amount){
+        return parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
 
     return (
@@ -293,7 +297,7 @@ export default function Reports() {
                                             {<Chip label={record.status} sx={{bgcolor:`${getColor(record.status)}`,color:'white'}} variant="outlined" />}
                                         </TableCell>
                                         <TableCell>{record.currency}</TableCell>
-                                        <TableCell>{record.payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TableCell>
+                                        <TableCell>{formatToCurrency(record.payment)}</TableCell>
                                     </TableRow>)
                                 )
                             }
@@ -319,7 +323,9 @@ export default function Reports() {
                                     <TableCell></TableCell>
                                     <TableCell>
                                         <Typography variant="h6"  noWrap  component="div">
-                                            Total: {(recordsAfterPagingAndSorting().reduce((a,b)=>a+parseInt(b.payment),0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                            {
+                                                formatToCurrency(recordsAfterPagingAndSorting()
+                                                    .reduce((a,b)=>a+parseFloat(b.status!='cancelled'?b.payment:0),0))}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>
