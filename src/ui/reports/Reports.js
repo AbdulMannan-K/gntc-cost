@@ -85,6 +85,11 @@ export default function Reports() {
     const navigate = useNavigate();
 
 
+    useEffect(() => {
+        const user = localStorage.getItem('Auth Token');
+        if(user==null) navigate("/login")
+    }, [0]);
+
     useEffect(()=>{
         getReports(setRecords);
         getReports(setRecordForEdit);
@@ -186,6 +191,7 @@ export default function Reports() {
         return parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
 
+
     return (
         <>
             <Snackbar
@@ -231,7 +237,7 @@ export default function Reports() {
                                 disablePortal
                                 size={'small'}
                                 defaultValue={'All'}
-                                options={['All',...companies.map((option) => option.bank)]}
+                                options={['All',...new Set([...companies.map((option) => option.bank)])]}
                                 sx={{ width: 150 }}
                                 onChange={(event, newValue) => {setCurrentBank(newValue)}}
                                 renderInput={(params) => <TextField {...params} label="Bank" />}
@@ -247,7 +253,7 @@ export default function Reports() {
                                 >
                                     <MenuItem value={'All'}>All</MenuItem>
                                     <MenuItem value={'USD'}>USD</MenuItem>
-                                    <MenuItem value={'EURO'}>EURO</MenuItem>
+                                    <MenuItem value={'EUR'}>EUR</MenuItem>
                                     <MenuItem value={'CHF'}>CHF</MenuItem>
                                 </Select>
                             </FormControl>
@@ -322,10 +328,10 @@ export default function Reports() {
                                     <TableCell></TableCell>
                                     <TableCell></TableCell>
                                     <TableCell>
-                                        <Typography variant="h6"  noWrap  component="div">
+                                        <Typography variant="p"  noWrap  component="div">
                                             {
                                                 formatToCurrency(recordsAfterPagingAndSorting()
-                                                    .reduce((a,b)=>a+parseFloat(b.status!='cancelled'?b.payment:0),0))}
+                                                    .reduce((a,b)=>a+parseFloat(b.status=='paid'?b.payment:0),0))}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>

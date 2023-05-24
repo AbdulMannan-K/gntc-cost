@@ -7,7 +7,7 @@ import {
     InputAdornment,
     Typography, Input, Button, TableRow, TextField, Snackbar, Alert,
 } from '@mui/material';
-import {PreviewOutlined, Search} from "@mui/icons-material";
+import { Search} from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -16,9 +16,12 @@ import Popup from "../components/Popup";
 import useTable from "../components/useTable";
 import {useNavigate} from "react-router-dom";
 import Container from "@mui/material/Container";
-import {addClient, deleteClient, getClients} from "../../services/services";
+import {addClient, deleteClient, getClients, readData} from "../../services/services";
 import ImageUpload from "./ImageUpload";
-
+import ArticleIcon from '@mui/icons-material/Article';
+import * as XLSX from "xlsx";
+import CSVReaderComponent from "./CSVReaderComponent";
+import XLSXReaderComponent from "./CSVReaderComponent";
 
 const styles = {
     pageContent: {
@@ -41,17 +44,16 @@ const styles = {
 
 const headCells = [
     { id: 'serialNumber', label:'Sr.'},
+    { id: 'order', label:'Order'},
     { id: 'name', label: 'Name' },
     { id: 'email', label: 'Email' },
     { id: 'phoneNumber', label: 'Phone Number' },
     { id: 'country', label: 'Country' },
     { id: 'vatNumber', label: 'Vat Number' },
-    { id: 'uniqueNumber', label: 'Unique Number' },
     { id: 'currency', label: 'Currency'},
     { id: 'bank', label: 'Bank'},
     { id: 'iban', label: 'IBAN'},
     { id: 'swift', label: 'Swift No.'},
-    { id: 'documents', label: 'Documents'},
     { id: 'edit', label: 'Edit', disableSorting: true}
 ]
 
@@ -71,6 +73,12 @@ export default function Clients() {
     let serialNumber=1;
 
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        const user = localStorage.getItem('Auth Token');
+        if(user==null) navigate("/login")
+    }, [0]);
 
     const {
         TblContainer,
@@ -114,12 +122,12 @@ export default function Clients() {
     }
 
     const delClient = async (client) => {
-        let clients = await deleteClient(client.uniqueNumber);
+        let clients = await deleteClient(client.name);
         setRecords(clients);
     }
 
     return (
-        <>
+        <div style={{marginBottom:'50px'}}>
             <Snackbar
                 anchorOrigin={{
                     vertical: 'top',
@@ -133,13 +141,14 @@ export default function Clients() {
                     Client already exists
                 </Alert>
             </Snackbar>
-            <Container maxWidth="xl">
+            <div style={{margin:20}}>
                     <Paper sx={classes.pageContent}>
                         <div style={classes.toolBar}>
                             <Typography variant="h4" sx={{display:{xs:'none',md:'flex'}}} noWrap  component="div">
                                 Companies
                             </Typography>
                             <div style={classes.searchToggle}>
+                                {/*<CSVReaderComponent></CSVReaderComponent>*/}
                                 <TextField
                                     placeholder="Search"
                                     size="small"
@@ -173,33 +182,31 @@ export default function Clients() {
                                 >Add</Button>
                             </div>
                         </div>
-                        <TblContainer>
+                        <TblContainer >
                             <TblHead/>
                             <TableBody>
                                 {
                                     recordsAfterPagingAndSorting().map(user =>
-                                        (<TableRow key={user.phoneNumber}>
+                                        (<TableRow key={user.name}>
                                             <TableCell>{("0000" + serialNumber++).slice(-5)}</TableCell>
+                                            <TableCell>{serialNumber==2?0:user.order}</TableCell>
                                             <TableCell>{user.name}</TableCell>
                                             <TableCell>{user.email}</TableCell>
                                             <TableCell>{user.phoneNumber}</TableCell>
                                             <TableCell>{user.country}</TableCell>
                                             <TableCell>{user.vatNumber}</TableCell>
-                                            <TableCell>{user.uniqueNumber}</TableCell>
                                             <TableCell>{user.currency}</TableCell>
                                             <TableCell>{user.bank}</TableCell>
                                             <TableCell>{user.iban}</TableCell>
                                             <TableCell>{user.swift}</TableCell>
                                             <TableCell>
-                                                <IconButton
-                                                    color='primary'
-                                                    onClick={()=>{setImageView(true);setCurrentClient(user)}}
-                                                >
-                                                    <PreviewOutlined fontSize='small'/>
-                                                </IconButton>
-                                            </TableCell>
-                                            <TableCell>
                                                 <div style={{display:'flex'}}>
+                                                    <IconButton
+                                                        color='primary'
+                                                        onClick={()=>{setImageView(true);setCurrentClient(user)}}
+                                                    >
+                                                        <ArticleIcon fontSize='small'/>
+                                                    </IconButton>
                                                     <IconButton
                                                         color="primary"
                                                         onClick={() => { openInPopup(user) }}
@@ -229,13 +236,13 @@ export default function Clients() {
                             addItem={addOrEdit}
                         />
                     </Popup>
-            </Container>
+            </div>
             <ImageUpload
                 open={imageView}
                 setOpen={setImageView}
                 images_data={currentClient?currentClient.images:undefined}
                 company={currentClient?currentClient:undefined}
             ></ImageUpload>
-        </>
+        </div>
     )
 }

@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import ImageViewer from "react-simple-image-viewer";
 import {addClient, addImageToClient, delImageFromClient} from "../../services/services";
 import axios from "axios";
+import Button from "@mui/material/Button";
 
 function ImageUpload(props) {
 
@@ -53,6 +54,8 @@ function ImageUpload(props) {
         }).then(async res => {
             images?setImages([...images,res.data]):setImages([res.data]);
             (await addImageToClient(company,res.data));
+        }).catch(err => {
+            console.log(err)
         })
     }
 
@@ -91,8 +94,9 @@ function ImageUpload(props) {
                         Documents
                     </Typography>
                     <div className="mt-2">
-                        <input type="file" onChange={onFileChange} />
-                        <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={(e)=>handleImageSubmit(e,image)}>Add Image</button>
+                        <input id='filePicker' type="file" onChange={onFileChange} />
+                        <Button variant='contained' color='primary'
+                            onClick={(e)=>handleImageSubmit(e,image)}>Add Image</Button>
                     </div>
                 </Toolbar>
             </AppBar>
@@ -110,7 +114,8 @@ function ImageUpload(props) {
                         }}
 
                     />
-                        {<button className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800" onClick={(e)=>handleImageDelete(e,image,index)}>Delete</button>}
+                        {<Button variant='contained' color='error'
+                            onClick={(e)=>handleImageDelete(e,image,index)}>Delete</Button>}
                     </div>)}
                 </div>:<></>}
             </div>

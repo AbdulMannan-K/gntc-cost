@@ -32,7 +32,7 @@ export const calculateDayTotal = (eventList)=>{
         if (!dayTotalPayments[date]) {
             dayTotalPayments[date] = 0;
         }
-        dayTotalPayments[date] += parseFloat(event.payment);
+        dayTotalPayments[date] += event.status!=='cancelled'?parseFloat(event.payment):0;
     });
     return dayTotalPayments;
 }
@@ -96,22 +96,26 @@ export const getClients = async (setClients) => {
     const clientList = clientSnapshot.docs.map(doc => doc.data());
     clients = clientList;
     console.log(clients)
-    setClients(clientList);
+    clients = clientList.sort((a, b) => (a.order > b.order ? 1 : -1));
+    setClients(clients);
 }
 
 export const addClient = async(client,toBeUpdated) => {
 
 
-    const docRef = doc(db, "clients", client.uniqueNumber);
+    const docRef = doc(db, "clients", client.name);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists() && toBeUpdated) {
         return null;
     } else {
-
-        await setDoc(doc(db, "clients", client.uniqueNumber), {
-
+        if(toBeUpdated){
+            client.order=clients.length+1
+        }
+        await setDoc(doc(db, "clients", client.name), {
+            // await setDoc(doc(db, "clients", client.uniqueNumber), {
             name: client.name,
+            order: client.order,
             vatNumber: client.vatNumber,
             uniqueNumber: client.uniqueNumber,
             phoneNumber: client.phoneNumber,
@@ -127,7 +131,7 @@ export const addClient = async(client,toBeUpdated) => {
 
         if(!toBeUpdated){
             //update client list
-            clients = clients.filter(c=> c.uniqueNumber !== client.uniqueNumber);
+            clients = clients.filter(c=> c.name !== client.name);
             clients.push(client)
         }else{
             clients.push(client);
@@ -138,32 +142,32 @@ export const addClient = async(client,toBeUpdated) => {
 
 export const deleteClient = async (id) => {
     await deleteDoc(doc(db, "clients", id));
-    clients = clients.filter(client => client.uniqueNumber !== id);
+    clients = clients.filter(client => client.name !== id);
     return clients;
 }
 
 export const addImageToClient = async (client,image)=>{
-    const docRef = doc(db, "clients", client.uniqueNumber);
+    const docRef = doc(db, "clients", client.name);
     const docSnap = await getDoc(docRef);
-    await setDoc(doc(db, "clients", client.uniqueNumber), {
+    await setDoc(doc(db, "clients", client.name), {
         ...client,
         images: [...client.images,image]
     });
-    clients = clients.filter(c=> c.uniqueNumber !== client.uniqueNumber);
+    clients = clients.filter(c=> c.name !== client.name);
     client.images.push(image)
     clients.push(client)
     return client;
 }
 
 export const delImageFromClient = async (client,image)=>{
-    const docRef = doc(db, "clients", client.uniqueNumber);
+    const docRef = doc(db, "clients", client.name);
     client.images = client.images.filter(img=>img!=image)
     const docSnap = await getDoc(docRef);
-    await setDoc(doc(db, "clients", client.uniqueNumber), {
+    await setDoc(doc(db, "clients", client.name), {
         ...client,
         images: client.images
     });
-    clients = clients.filter(c=> c.uniqueNumber !== client.uniqueNumber);
+    clients = clients.filter(c=> c.name !== client.name);
     clients.push(client)
     return client;
 }

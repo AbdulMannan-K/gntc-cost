@@ -177,7 +177,10 @@ export const Calendar = () => {
                     const role = localStorage.getItem('Role');
                     return (<div>
                         <div>
-                            <p>Company Name: {event.company} </p>
+                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                <p style={{display:'inline',marginBottom:'0px'}}>Company Name: {event.company} </p>
+                                <BeenhereIcon sx={{display:event.status=='paid'?'flex':'none'}} size='large'  fontSize="large" color='primary'></BeenhereIcon>
+                            </div>
                             <p>{formatToCurrency(event.payment)} {event.currency=='EUR'?'€':event.currency=='USD'?'$':'₣'}</p>
                             <p>Bank: {event.bank}</p>
                         </div>
@@ -204,8 +207,8 @@ export const Calendar = () => {
                                 <h3 style={{display:'inline',marginBottom:'0px'}}>{event.company} </h3>
                                 <BeenhereIcon sx={{display:event.status=='paid'?'flex':'none'}} size='small' color='primary'></BeenhereIcon>
                             </div>
-                            <h3>{formatToCurrency(event.payment)} {event.currency=='EUR'?'€':event.currency=='USD'?'$':'₣'}</h3>
-                            <h3>{event.bank}</h3>
+                            <h3 style={{marginBottom:0}}>{formatToCurrency(event.payment)} {event.currency=='EUR'?'€':event.currency=='USD'?'$':'₣'}</h3>
+                            <h3 style={{marginBottom:0}}>{event.bank}</h3>
                         </div>
                     );
                 }}

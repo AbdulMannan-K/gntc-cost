@@ -160,7 +160,7 @@ function Navbar() {
                             }
                             sx={{ my: 2, color: 'white', display: 'block' }}
                         >
-                            Logout, {localStorage.getItem('employee')}
+                            {localStorage.getItem('employee')?'Logout, '+ localStorage.getItem('employee'):''}
                         </Button>
                     </Box>
                 </div>

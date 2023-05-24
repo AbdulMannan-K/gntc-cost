@@ -75,7 +75,6 @@ export const CustomEditor = ({ scheduler }) => {
                 }, 100);
             })) ;
             addEvent(added_updated_event,false)
-            console.log(events);
             scheduler.onConfirm(added_updated_event, event ? "edit" : "create");
             scheduler.close();
         } finally {
@@ -95,8 +94,8 @@ export const CustomEditor = ({ scheduler }) => {
                 />
                 <Autocomplete
                     disablePortal
+                    fullWidth={true}
                     options={companies.map((option) => option.name)}
-                    sx={{ width: 250 }}
                     onChange={(event, newValue) => {handleChange(newValue,'company')}}
                     renderInput={(params) => <TextField {...params} label="Company" />}
                 />
@@ -117,7 +116,7 @@ export const CustomEditor = ({ scheduler }) => {
             </div>
             <DialogActions>
                 <Button onClick={scheduler.close}>Cancel</Button>
-                <Button onClick={handleSubmit}>Confirm</Button>
+                <Button disabled={localStorage.getItem('Role')=='CEO'?true:false} onClick={handleSubmit}>Confirm</Button>
             </DialogActions>
         </div>
     );

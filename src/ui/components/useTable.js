@@ -6,14 +6,14 @@ import { styled } from '@mui/material/styles'
 export default function useTable(records, headCells,filterFn) {
 
 
-    const pages = [30, 50, 105]
+    const pages = [10, 30, 50,100]
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(pages[page])
     const [order, setOrder] = useState()
     const [orderBy, setOrderBy] = useState()
 
     const TblContainer = props => (
-        <TableContainer>
+        <TableContainer >
             <Table sx={{marginTop: (theme) => theme.spacing(1)}}>
                 {props.children}
             </Table>
@@ -23,7 +23,6 @@ export default function useTable(records, headCells,filterFn) {
     const TblHead = props => {
 
         const handleSortRequest = cellId => {
-            console.log(cellId)
             const isAsc = orderBy === cellId && order === "asc";
             setOrder(isAsc ? 'desc' : 'asc');
             setOrderBy(cellId)

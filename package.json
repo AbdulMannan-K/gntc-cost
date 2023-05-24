@@ -21,6 +21,7 @@
     "react": "^18.2.0",
     "react-bootstrap-daterangepicker": "^8.0.0",
     "react-dom": "^18.2.0",
+    "react-papaparse": "^4.1.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
     "short-unique-id": "^4.4.4",
@@ -53,6 +54,7 @@
   "devDependencies": {
     "file-saver": "^2.0.5",
     "prettier": "^2.8.8",
+    "react-csv-reader": "^4.0.0",
     "react-simple-image-viewer": "^1.2.2",
     "xlsx": "^0.18.5",
     "xlsx-style": "^0.8.13"
