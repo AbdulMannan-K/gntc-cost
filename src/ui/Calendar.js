@@ -158,7 +158,7 @@ export const Calendar = () => {
     }
 
     return (
-        <Container maxWidth="xl" id="calendar">
+        <div style={{margin:20}} id="calendar">
             <Scheduler
                 month={month}
                 week={week}
@@ -214,7 +214,7 @@ export const Calendar = () => {
                 }}
             />
             <Stack direction="row" sx={{ flexWrap: 'wrap',gap:'1px' ,display:view!=='day'?{xs:'none',md:'flex'}:'' }}>
-                {view!=='month'?<Paper sx={{width: `${width}px`, fontWeight:'bold' , backgroundColor:'#29AB87', textAlign: 'center', paddingTop: '10px',display:{xs:'none',md:'flex'}}}>Total :</Paper>:null}
+                {view!=='month'?<Paper sx={{width: `${width-2}px`, fontWeight:'bold' , backgroundColor:'#29AB87', textAlign: 'center', paddingTop: '10px',display:{xs:'none',md:'flex'}}}>Total :</Paper>:null}
                 {
                     dayTotalElement?dayTotalElement.map((date) => {
                         return (
@@ -226,6 +226,6 @@ export const Calendar = () => {
                     }):null
                 }
             </Stack>
-        </Container>
+        </div>
     )
 }

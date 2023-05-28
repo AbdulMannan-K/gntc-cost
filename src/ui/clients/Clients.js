@@ -7,7 +7,7 @@ import {
     InputAdornment,
     Typography, Input, Button, TableRow, TextField, Snackbar, Alert,
 } from '@mui/material';
-import { Search} from "@mui/icons-material";
+import {SaveAltOutlined, Search} from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -15,13 +15,9 @@ import IconButton from "@mui/material/IconButton";
 import Popup from "../components/Popup";
 import useTable from "../components/useTable";
 import {useNavigate} from "react-router-dom";
-import Container from "@mui/material/Container";
 import {addClient, deleteClient, getClients, readData} from "../../services/services";
 import ImageUpload from "./ImageUpload";
 import ArticleIcon from '@mui/icons-material/Article';
-import * as XLSX from "xlsx";
-import CSVReaderComponent from "./CSVReaderComponent";
-import XLSXReaderComponent from "./CSVReaderComponent";
 
 const styles = {
     pageContent: {
@@ -43,7 +39,7 @@ const styles = {
 }
 
 const headCells = [
-    { id: 'serialNumber', label:'Sr.'},
+    { id: 'serialNumber', label:'Nr.'},
     { id: 'order', label:'Order'},
     { id: 'name', label: 'Name' },
     { id: 'email', label: 'Email' },
@@ -115,6 +111,42 @@ export default function Clients() {
         setOpenPopup(false)
         // setRecordForEdit(null);
     }
+
+    function exportToCSV(recordsAfterPagingAndSorting1, reports) {
+        //rcport file to csv
+        const csvData = [];
+        const headers = ["Nr.","Order Number","Name","Email","Phone Number","Country","Vat Number","Currency","Bank","IBAN","Swift No."];
+        csvData.push(headers);
+        records.map((record,index) => {
+                const rowData = [
+                    index+1,
+                    record.order,
+                    record.name,
+                    record.email,
+                    record.phoneNumber,
+                    record.country,
+                    record.vatNumber,
+                    record.currency,
+                    record.bank,
+                    record.iban,
+                    record.swift
+                ];
+                csvData.push(rowData);
+            }
+        );
+        let csvString = '';
+        csvData.forEach(function (rowArray) {
+                let row = rowArray.join(',');
+                csvString += row + '\r\n';
+            }
+        );
+        let data = encodeURI(csvString);
+        let link = document.createElement('a');
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,' + data);
+        link.setAttribute('download', 'reports.csv');
+        link.click();
+    }
+
 
     const openInPopup = async item => {
         setRecordForEdit(item)
@@ -224,6 +256,22 @@ export default function Clients() {
                                 }
                             </TableBody>
                         </TblContainer>
+                        <span style={{position:'absolute',marginTop:10, zIndex:100,}}>
+                        <div style={{display:"block"    }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                startIcon={<SaveAltOutlined />}
+                                sx={{display:{xs:'none',md:'flex'}}}
+                                onClick={() => {
+                                    exportToCSV(recordsAfterPagingAndSorting(), 'reports')
+                                }}
+                            >
+                                Export
+                            </Button>
+                        </div>
+                    </span>
                         <TblPagination/>
                     </Paper>
                     <Popup
