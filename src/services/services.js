@@ -21,7 +21,7 @@ export const getEvents = async (setEvents) => {
     })
     events = eventList;
 
-    setEvents(eventList);
+    // setEvents(eventList);
     return eventList;
 }
 
@@ -37,13 +37,18 @@ export const calculateDayTotal = (eventList)=>{
     return dayTotalPayments;
 }
 
+export const getEventsByDateRange = (start,end,setEvents) => {
+    console.log(start,end)
+    let eventsFiltered = events.filter(event => event.start >= start && event.start <= end);
+    setEvents(eventsFiltered);
+}
+
 export const signUp = async (user) => {
     try {
         const docRef = await setDoc(doc(db, "users",user.email), {
             email:user.email,
             firstName:user.firstName,
             secondName:user.secondName,
-            password:user.password,
             role:user.role
         });
     } catch (e) {
@@ -84,6 +89,7 @@ export const addEvent = async (event,toBeUpdated) => {
     }
     else
         events.push(event);
+
     return events;
 }
 
@@ -97,7 +103,6 @@ export const getClients = async (setClients) => {
     const clientSnapshot = await getDocs(collection(db, "clients"));
     const clientList = clientSnapshot.docs.map(doc => doc.data());
     clients = clientList;
-    console.log(clients)
     clients = clientList.sort((a, b) => (a.order > b.order ? 1 : -1));
     setClients(clients);
 }
