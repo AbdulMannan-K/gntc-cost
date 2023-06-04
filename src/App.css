@@ -40,6 +40,10 @@
   width: 100% !important;
 }
 
+.css-xzhep0 {
+    border: 1px solid red;
+}
+
 .css-1nlly2f .rs__cell.rs__header>:first-of-type{
     background-color: #039be5;
 }
@@ -157,4 +161,8 @@ h3{
 
 .css-19s31ak>div:first-of-type{
     display: none;
+}
+
+.cursor-pointer{
+    cursor: pointer;
 }

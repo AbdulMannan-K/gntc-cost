@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {getEmp} from "../services/services";
 import {Alert, Snackbar, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
+import axios from "axios";
 import React from "react";
 
 
@@ -98,7 +99,10 @@ function Login(props) {
                     type="password"
                     onKeyDown={keypress}
                 />
-                <p className="cursor-pointer" onClick={()=>navigate('/signup')}>don't have an account? signup</p>
+                <div style={{margin:0,display:"flex",justifyContent:"space-between",width:'100%'}}>
+                    <p style={{textDecoration:"underline",margin:0}} className="cursor-pointer" onClick={()=>navigate('/signup')}>Signup</p>
+                    <p style={{textDecoration:"underline",margin:0}} className="cursor-pointer" onClick={()=>navigate('/forgotPassword')}>Reset Password</p>
+                </div>
                 <Button
                     type="submit"
                     variant={"contained"}

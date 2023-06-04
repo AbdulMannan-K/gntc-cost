@@ -11,6 +11,7 @@ import ClientForm from "./ui/clients/ClientForm";
 import Reports from "./ui/reports/Reports";
 import Login from "./auth/login";
 import Signup from "./auth/signup";
+import ForgotPassword from "./auth/forgotPassword";
 
 function App() {
 
@@ -70,6 +71,13 @@ function App() {
                     element:
                         <div>
                             <Signup></Signup>
+                        </div>
+                },
+                {
+                    path:"/forgotPassword",
+                    element:
+                        <div>
+                            <ForgotPassword></ForgotPassword>
                         </div>
                 }
             ]

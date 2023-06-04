@@ -51,6 +51,8 @@ export const signUp = async (user) => {
     }
 }
 
+
+
 export const getEmp= async (emp) => {
     const docc = doc(db, "users", emp);
     const docSnap = await getDoc(docc);

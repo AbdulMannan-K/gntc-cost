@@ -75,6 +75,7 @@ export const CustomEditor = ({ scheduler }) => {
                 }, 100);
             })) ;
             addEvent(added_updated_event,false)
+
             scheduler.onConfirm(added_updated_event, event ? "edit" : "create");
             scheduler.close();
         } finally {

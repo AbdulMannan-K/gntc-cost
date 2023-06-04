@@ -10,6 +10,7 @@ import {signUp} from "../services/services";
 import {Alert, Snackbar, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import React from "react";
+import axios from "axios";
 
 
 const initialValues = {
@@ -25,6 +26,7 @@ function Signup(props) {
     const auth = getAuth();
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
+    const [errorText,setErrorText] = React.useState('Please fill all the fields correctly')
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -53,16 +55,30 @@ function Signup(props) {
         console.log(errors)
         if((!values.email || !values.password || !values.role || !values.firstName || !values.secondName)){
             // alert('Please fill all the fields correctly')
+            setErrorText('Please fill all the fields correctly')
             setOpen(true)
         }
         else {
-            await createUserWithEmailAndPassword(auth, values.email, values.password).then(async (response) => {
-                await signUp(values)
-                navigate('/login');
-            }).catch(err => {
-                alert('User already exists')
-                console.log(err);
-            })
+
+            axios.get(`https://api.hunter.io/v2/email-verifier?email=${values.email}&api_key=2bc3901db054f5453dc64dc58ee629d28ee0093c`).then(async res => {
+                let valid = (res.data.data.status)
+                if (valid === 'valid') {
+                    await createUserWithEmailAndPassword(auth, values.email, values.password).then(async (response) => {
+                        await signUp(values)
+                        navigate('/login');
+                    }).catch(err => {
+                        alert('User already exists')
+                        console.log(err);
+                    })
+                }else{
+                    setErrorText('Please enter a valid email')
+                    setOpen(true)
+                }
+            } ).catch(err => {
+                console.log(err)
+            });
+
+
         }
     }
     return (
@@ -104,7 +120,7 @@ function Signup(props) {
                     label="Second Name"
                     name="secondName"
                     variant="outlined"
-                    error={errors.secndName}
+                    error={errors.secondName}
                 />
                 <TextField
                     onChange={handleInputChange}
@@ -157,7 +173,7 @@ function Signup(props) {
                 onClose={()=>setOpen(false)}
             >
                 <Alert onClose={()=>setOpen(false)} severity="error" sx={{ width: '100%' }}>
-                    Please fill all the fields correctly
+                    {errorText}
                 </Alert>
             </Snackbar>
         </div>
