@@ -21,7 +21,7 @@ export const getEvents = async (setEvents) => {
     })
     events = eventList;
 
-    setEvents(eventList);
+    // setEvents(eventList);
     return eventList;
 }
 
@@ -35,6 +35,12 @@ export const calculateDayTotal = (eventList)=>{
         dayTotalPayments[date] += event.status!=='cancelled'?parseFloat(event.payment):0;
     });
     return dayTotalPayments;
+}
+
+export const getEventsByDateRange = (start,end,setEvents) => {
+    console.log(start,end)
+    let eventsFiltered = events.filter(event => event.start >= start && event.start <= end);
+    setEvents(eventsFiltered);
 }
 
 export const signUp = async (user) => {
@@ -82,6 +88,7 @@ export const addEvent = async (event,toBeUpdated) => {
     }
     else
         events.push(event);
+
     return events;
 }
 
@@ -95,7 +102,6 @@ export const getClients = async (setClients) => {
     const clientSnapshot = await getDocs(collection(db, "clients"));
     const clientList = clientSnapshot.docs.map(doc => doc.data());
     clients = clientList;
-    console.log(clients)
     clients = clientList.sort((a, b) => (a.order > b.order ? 1 : -1));
     setClients(clients);
 }

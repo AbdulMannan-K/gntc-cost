@@ -70,10 +70,11 @@ h3{
 }
 
 #calendar{
-    height: 87vh;
     display: flex;
     justify-content: center;
     flex-direction: column;
+    margin-top: 4% !important;
+    margin-bottom: 3% !important;
 }
 
 /*[data-testid="rs-wrapper"] {*/

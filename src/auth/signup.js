@@ -10,6 +10,7 @@ import {signUp} from "../services/services";
 import {Alert, Snackbar, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import React from "react";
+import axios from "axios";
 
 
 const initialValues = {
@@ -56,6 +57,24 @@ function Signup(props) {
             setOpen(true)
         }
         else {
+
+            const apiUrl = 'https://api.zerobounce.net/v2/validate';
+            const apiKey = 'YOUR_API_KEY';
+
+            const response = await axios.get(apiUrl, {
+                params: {
+                    api_key: apiKey,
+                    email: values.email
+                }
+            });
+
+            const { status, sub_status, address } = response.data;
+
+            console.log('Verification Status:', status);
+            console.log('Verification Sub Status:', sub_status);
+            console.log('Email Address:', address);
+
+
             await createUserWithEmailAndPassword(auth, values.email, values.password).then(async (response) => {
                 await signUp(values)
                 navigate('/login');

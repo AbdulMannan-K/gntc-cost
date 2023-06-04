@@ -41,8 +41,8 @@ function Navbar() {
     };
 
     return (
-        <AppBar position="static" sx={{bgcolor:'#29AB87'}}>
-            <Container maxWidth="xl">
+        <AppBar position="static" sx={{bgcolor:'#29AB87',height:'80px'}}>
+            <div style={{marginLeft:20,marginRight:20}}>
                 <div
                     style={{
                         display: 'flex',
@@ -56,7 +56,7 @@ function Navbar() {
                     <Box
                         component="img"
                         sx={{
-                            height: '60px',
+                            height: '70px',
                             display: { xs: 'none', md: 'flex' },
                         }}
                         alt="gntc cost logo"
@@ -164,7 +164,7 @@ function Navbar() {
                         </Button>
                     </Box>
                 </div>
-            </Container>
+            </div>
         </AppBar>
     );
 }

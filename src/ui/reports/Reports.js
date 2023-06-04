@@ -193,7 +193,7 @@ export default function Reports() {
 
 
     return (
-        <>
+        <div style={{marginBottom:'50px'}}>
             <Snackbar
                 anchorOrigin={{
                     vertical: 'top',
@@ -207,7 +207,7 @@ export default function Reports() {
                     Client already exists
                 </Alert>
             </Snackbar>
-            <Container maxWidth="xl">
+            <div style={{margin:20}}>
                 <Paper sx={classes.pageContent}>
                     <div style={classes.toolBar}>
                         <Typography variant="h4" sx={{display:{xs:'none',md:'flex'}}} noWrap  component="div">
@@ -357,7 +357,7 @@ export default function Reports() {
                     <TblPagination />
 
                 </Paper>
-            </Container>
-        </>
+            </div>
+        </div>
     )
 }

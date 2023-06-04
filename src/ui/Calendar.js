@@ -3,7 +3,7 @@ import React, {Fragment, useEffect, useRef, useState} from "react";
 import {CustomEditor} from "./CustomEditor";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import {addEvent, calculateDayTotal, deleteEvent, getEvents} from "../services/services";
+import {addEvent, calculateDayTotal, deleteEvent, getEvents, getEventsByDateRange} from "../services/services";
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import {Paper, Stack} from "@mui/material";
     import {useNavigate} from "react-router-dom";
@@ -96,9 +96,8 @@ export const Calendar = () => {
 
     useEffect( () => {
         getEvents(setEvents)
-        setWidth(document.querySelectorAll(".rs__cell.rs__time")[0].offsetWidth)
-        setSecondWidth(document.querySelectorAll(".rs__cell>button")[0].offsetWidth)
     },[0])
+
 
     const getTotal = (viewMode) => {
         if(viewMode=='month'){      
@@ -106,9 +105,13 @@ export const Calendar = () => {
         }else if(viewMode=='week') {
             let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
             let day = parseInt(dateString.split(' ')[0])
+            let end = parseInt(dateString.split(' ')[2].split('<')[0])
             let month = getMonthFromString(dateString.split(' ')[3]) - 1
             let year = parseInt(dateString.split(' ')[4].split('<')[0])
             let dayTotalElems = [];
+            if(day>end){
+                month=month-1
+            }
             for (let i = 0; i < 7; i++) {
                 dayTotalElems.push(dayTotal[new Date((year), (month), (day) + i).toDateString()])
             }
@@ -121,6 +124,38 @@ export const Calendar = () => {
             let dayTotalElems = [];
             dayTotalElems.push(dayTotal[new Date((year), (month), (day)).toDateString()])
             setDayTotalElement(dayTotalElems)
+        }
+    }
+
+    const getEventsByDate=(viewMode)=>{
+        if(viewMode=='month'){
+            let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
+            let month = getMonthFromString(dateString.split(' ')[0]) - 1
+            let year = parseInt(dateString.split(' ')[1].split('<')[0])
+            let startDateTime = new Date((year), (month-1), 25)
+            let endDateTime = new Date((year), (month) + 1, 0)
+            console.log(month, year, startDateTime, endDateTime)
+            getEventsByDateRange(startDateTime, endDateTime, setEvents)
+        }else if(viewMode=='week') {
+            let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
+            let day = parseInt(dateString.split(' ')[0])
+            let end = parseInt(dateString.split(' ')[2].split('<')[0])
+            let month = getMonthFromString(dateString.split(' ')[3]) - 1
+            let year = parseInt(dateString.split(' ')[4].split('<')[0])
+            if(day>end){
+                month=month-1
+            }
+            let startDateTime = new Date((year), (month), (day))
+            let endDateTime = new Date((year), (month), (day) + 7)
+            getEventsByDateRange(startDateTime, endDateTime, setEvents)
+        }else if(viewMode=='day'){
+            let dateString = (document.querySelectorAll('[data-testid=date-navigator]')[0].children[1].innerHTML)
+            let day = parseInt(dateString.split(' ')[0])
+            let month = getMonthFromString(dateString.split(' ')[1]) - 1
+            let year = parseInt(dateString.split(' ')[2].split('<')[0])
+            let startDateTime = new Date((year), (month), (day))
+            let endDateTime = new Date((year), (month), (day+1))
+            getEventsByDateRange(startDateTime, endDateTime, setEvents)
         }
     }
 
@@ -150,6 +185,9 @@ export const Calendar = () => {
 
     useInterval(() => {
         getTotal(view)
+        getEventsByDate(view)
+        setWidth(document.querySelectorAll(".rs__cell.rs__time")[0].offsetWidth)
+        setSecondWidth(document.querySelectorAll(".rs__cell>button")[0].offsetWidth)
         setMobileWidth(document.querySelectorAll(".rs__cell>button")[0]?document.querySelectorAll(".rs__cell>button")[0].offsetWidth:0)
     }, 500);
 
@@ -185,13 +223,13 @@ export const Calendar = () => {
                             <p>Bank: {event.bank}</p>
                         </div>
                         <div style={{display:'flex', justifyContent:'stretch',gap:'5px' ,marginBottom:'10px'}}>
-                            <Button sx={{width:'50%'}} disabled={event.status=='cancelled'||event.status=='paid' || role=='Employee'?true:false} variant="outlined" type="button" color="success"
+                            <Button sx={{width:'50%'}} disabled={event.status=='cancelled'||event.status=='paid' || role=='CEO'?true:false} variant="outlined" type="button" color="success"
                                 onClick={() => {approveEvent(event)}}
                             >Approve</Button>
-                            <Button sx={{width:'50%'}} disabled={(event.status=='pending' || event.status=='rescheduled')&& role!='Employee'?false:true} variant="outlined" type="button" color="warning"
+                            <Button sx={{width:'50%'}} disabled={(event.status=='pending' || event.status=='rescheduled')&& role!='CEO'?false:true} variant="outlined" type="button" color="warning"
                                     onClick={() => {rescheduleEvent(event)}}
                             >Reschedule</Button>
-                            <Button sx={{width:'50%'}} disabled={event.status=='approved'||event.status=='paid'|| role=='Employee'?true:false} variant="outlined" type="button" color="error"
+                            <Button sx={{width:'50%'}} disabled={event.status=='approved'||event.status=='paid'|| role=='CEO'?true:false} variant="outlined" type="button" color="error"
                                 onClick={() => {cancelEvent(event)}}
                             >Cancel</Button>
                         </div>
@@ -214,7 +252,7 @@ export const Calendar = () => {
                 }}
             />
             <Stack direction="row" sx={{ flexWrap: 'wrap',gap:'1px' ,display:view!=='day'?{xs:'none',md:'flex'}:'' }}>
-                {view!=='month'?<Paper sx={{width: `${width-2}px`, fontWeight:'bold' , backgroundColor:'#29AB87', textAlign: 'center', paddingTop: '10px',display:{xs:'none',md:'flex'}}}>Total :</Paper>:null}
+                {view!=='month'?<Paper sx={{width: `${width-2}px`, fontWeight:'bold' , backgroundColor:'#29AB87', textAlign: 'center', paddingTop: '10px',paddingLeft:'10px',display:{xs:'none',md:'flex'}}}>Total :</Paper>:null}
                 {
                     dayTotalElement?dayTotalElement.map((date) => {
                         return (

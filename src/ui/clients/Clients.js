@@ -263,7 +263,7 @@ export default function Clients() {
                                 color="primary"
                                 size="small"
                                 startIcon={<SaveAltOutlined />}
-                                sx={{display:{xs:'none',md:'flex'}}}
+                                sx={{display:{xs:'none',md:!imageView?'flex':'none'}}}
                                 onClick={() => {
                                     exportToCSV(recordsAfterPagingAndSorting(), 'reports')
                                 }}
