@@ -38,7 +38,6 @@ export const calculateDayTotal = (eventList)=>{
 }
 
 export const getEventsByDateRange = (start,end,setEvents) => {
-    console.log(start,end)
     let eventsFiltered = events.filter(event => event.start >= start && event.start <= end);
     setEvents(eventsFiltered);
 }
@@ -191,7 +190,6 @@ export const getReports=async(setReports,timeRange,companyName,bankName,currency
         }
     })
     events = eventList;
-    console.log(eventList[0].start)
     setReports(eventList);
     return eventList;
 }

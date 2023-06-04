@@ -19,8 +19,6 @@ function ImageUpload(props) {
     const [imageViewer,setImageViewer] = useState(false);
 
     useEffect(()=> {
-        console.log('images_data : ')
-        console.log(images_data)
         images_data!=null?setImages([...images_data]):setImages([]);
     },[images_data])
 
@@ -35,9 +33,6 @@ function ImageUpload(props) {
 
     const handleImageSubmit = (e,image)=>{
         e.preventDefault()
-        console.log('images : ')
-        console.log(images_data)
-        console.log(images)
         if(images!=null && images.length==5) {
             alert('You cant enter more then 5 images')
             return
@@ -46,7 +41,6 @@ function ImageUpload(props) {
             alert('Please select an image')
             return
         }
-        console.log(company)
         const formData = new FormData()
         formData.append('image', image)
         formData.append('client',company.name )
@@ -62,12 +56,9 @@ function ImageUpload(props) {
     async function handleImageDelete(e, imageToDel, index) {
         setImages(images.filter((image) => image != imageToDel))
         let imageName = imageToDel.split('/');
-        console.log('imageName : ', imageName)
-        console.log(imageToDel)
         axios.delete(`http://localhost:4000/${imageName[imageName.length - 1]}/${company.name}`, {
 
         }).then(async res => {
-            console.log(res)
             await delImageFromClient(company,imageToDel)
         })
     }
