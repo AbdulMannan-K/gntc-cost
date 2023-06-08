@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import {useNavigate} from "react-router-dom";
 import {getAuth} from "firebase/auth";
 
-const pages = [{label:'Calendar',path:'/calendar'}, {label:'Clients',path:'/companies'}, {label:'Reports',path:'/reports'}];
+const pages = [{label:'Calendar',path:'/calendar'}, {label:'Clients',path:'/companies'}, {label:'Reports',path:'/reports'},{label:'Employees',path:'/employees'}];
 const settings = ['Profile', 'Account', 'Dashboard', 'Log out'];
 
 function Navbar() {

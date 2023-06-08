@@ -7,11 +7,10 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
 import Clients from "./ui/clients/Clients";
-import ClientForm from "./ui/clients/ClientForm";
 import Reports from "./ui/reports/Reports";
 import Login from "./auth/login";
-import Signup from "./auth/signup";
 import ForgotPassword from "./auth/forgotPassword";
+import {Employees} from "./ui/admin/employees";
 
 function App() {
 
@@ -67,10 +66,10 @@ function App() {
                         </div>
                 },
                 {
-                    path:"/signup",
+                    path:"/employees",
                     element:
                         <div>
-                            <Signup></Signup>
+                            <Employees></Employees>
                         </div>
                 },
                 {
@@ -79,7 +78,7 @@ function App() {
                         <div>
                             <ForgotPassword></ForgotPassword>
                         </div>
-                }
+                },
             ]
         },
     ]);

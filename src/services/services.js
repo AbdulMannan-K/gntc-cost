@@ -193,3 +193,24 @@ export const getReports=async(setReports,timeRange,companyName,bankName,currency
     setReports(eventList);
     return eventList;
 }
+
+export const deleteEmployee = async (employee) => {
+    try {
+        await deleteDoc(doc(db, "users", employee));
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
+
+export const getAllEmployees = async (setRecords)=>{
+    const querySnapshot = await getDocs(collection(db, "users"));
+    let employees = [];
+    querySnapshot.forEach((doc) => {
+        employees.push({
+            id:doc.id,
+            ...(doc.data()),
+        })
+    });
+    setRecords(employees)
+
+}
