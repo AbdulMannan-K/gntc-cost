@@ -223,13 +223,13 @@ export const Calendar = () => {
                             <p>Bank: {event.bank}</p>
                         </div>
                         <div style={{display:'flex', justifyContent:'stretch',gap:'5px' ,marginBottom:'10px'}}>
-                            <Button sx={{width:'50%'}} disabled={event.status=='cancelled'||event.status=='paid' || role=='CEO'?true:false} variant="outlined" type="button" color="success"
+                            <Button sx={{width:'50%'}} disabled={event.status=='cancelled'||event.status=='paid' || role=='Employee'?true:false} variant="outlined" type="button" color="success"
                                 onClick={() => {approveEvent(event)}}
                             >Approve</Button>
-                            <Button sx={{width:'50%'}} disabled={(event.status=='pending' || event.status=='rescheduled')&& role!='CEO'?false:true} variant="outlined" type="button" color="warning"
+                            <Button sx={{width:'50%'}} disabled={(event.status=='pending' || event.status=='rescheduled')&& role!='Employee'?false:true} variant="outlined" type="button" color="warning"
                                     onClick={() => {rescheduleEvent(event)}}
                             >Reschedule</Button>
-                            <Button sx={{width:'50%'}} disabled={event.status=='approved'||event.status=='paid'|| role=='CEO'?true:false} variant="outlined" type="button" color="error"
+                            <Button sx={{width:'50%'}} disabled={event.status=='approved'||event.status=='paid'|| role=='Employee'?true:false} variant="outlined" type="button" color="error"
                                 onClick={() => {cancelEvent(event)}}
                             >Cancel</Button>
                         </div>
