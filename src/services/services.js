@@ -48,7 +48,9 @@ export const signUp = async (user) => {
             email:user.email,
             firstName:user.firstName,
             secondName:user.secondName,
-            role:user.role
+            password:user.password,
+            role:user.role,
+            uid:user.uid
         });
     } catch (e) {
         console.error("Error adding document: ", e);
