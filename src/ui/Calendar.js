@@ -233,7 +233,7 @@ export const Calendar = () => {
                                 onClick={() => {cancelEvent(event)}}
                             >Cancel</Button>
                         </div>
-                        <Button fullWidth disabled={event.status!='approved' && event.status!='paid'?true:false} variant="contained" type="button" color="primary"
+                        <Button fullWidth disabled={event.status!='approved' || event.status=='paid' || role!='Employee'?true:false} variant="contained" type="button" color="primary"
                                 onClick={() => {payEvent(event)}}
                         >{event.status=='paid'?'Paid':'Pay'}</Button>
                     </div>);
