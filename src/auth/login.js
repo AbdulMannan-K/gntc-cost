@@ -99,10 +99,10 @@ function Login(props) {
                     type="password"
                     onKeyDown={keypress}
                 />
-                <div style={{margin:0,display:"flex",justifyContent:"space-between",width:'100%'}}>
-                    <p style={{textDecoration:"underline",margin:0}} className="cursor-pointer" onClick={()=>navigate('/signup')}>Signup</p>
-                    <p style={{textDecoration:"underline",margin:0}} className="cursor-pointer" onClick={()=>navigate('/forgotPassword')}>Reset Password</p>
-                </div>
+                {/*<div style={{margin:0,display:"flex",justifyContent:"space-between",width:'100%'}}>*/}
+                {/*    <p style={{textDecoration:"underline",margin:0}} className="cursor-pointer" onClick={()=>navigate('/signup')}>Signup</p>*/}
+                {/*    <p style={{textDecoration:"underline",margin:0}} className="cursor-pointer" onClick={()=>navigate('/forgotPassword')}>Reset Password</p>*/}
+                {/*</div>*/}
                 <Button
                     type="submit"
                     variant={"contained"}
