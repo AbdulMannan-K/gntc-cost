@@ -44,7 +44,7 @@ function ImageUpload(props) {
         const formData = new FormData()
         formData.append('image', image)
         formData.append('client',company.name )
-        axios.post(`http://localhost:4000/${company.name}`, formData, {
+        axios.post(`https://payadmin.gntcgroup.com/${company.name}`, formData, {
         }).then(async res => {
             images?setImages([...images,res.data]):setImages([res.data]);
             (await addImageToClient(company,res.data));
@@ -56,7 +56,7 @@ function ImageUpload(props) {
     async function handleImageDelete(e, imageToDel, index) {
         setImages(images.filter((image) => image != imageToDel))
         let imageName = imageToDel.split('/');
-        axios.delete(`http://localhost:4000/${imageName[imageName.length - 1]}/${company.name}`, {
+        axios.delete(`https://payadmin.gntcgroup.com/${imageName[imageName.length - 1]}/${company.name}`, {
 
         }).then(async res => {
             await delImageFromClient(company,imageToDel)

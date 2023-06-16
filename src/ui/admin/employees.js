@@ -107,7 +107,7 @@ export function Employees() {
 
     async function deleteUser(user) {
         await deleteEmployee(user.email);
-        await axios.delete(`https://localhost:4000/deleteUser/${user.uid}`)
+        await axios.delete(`https://payadmin.gntcgroup.com/deleteUser/${user.uid}`)
         setRecords(records.filter((item) => item.email !== user.email));
     }
 
