@@ -82,7 +82,11 @@ function EmployeeForm(props) {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '1rem',
+            }}>
                 <TextField
                     name="firstName"
                     label="First Name"
